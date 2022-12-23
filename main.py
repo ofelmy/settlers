@@ -1,4 +1,12 @@
 import random
+import time
+import os
+from prettytable import PrettyTable
+import msvcrt
+import tkinter as tk
+
+
+
 
 class settler():
     next_id = 0
@@ -82,26 +90,86 @@ def reproduction_probability(age):
         return 1
     else:
         return 0
-initial_settlers_number = 100
-settlers_list = []
 
-settlers_list = [settler() for i in range(initial_settlers_number)]
-
-for i in range(100):
-
-    print("jour: ", i)
-
-    for j in settlers_list:
+def next_day(s_list):
+    
+    for j in s_list:
         
         j.make_old()
         j.is_alive(natural_death_probability(j.age))
-        j.show()
+        
 
-    settlers_list = [se for se in settlers_list if se.state]
-    women_list = [se for se in settlers_list if se.gender == "woman"]
+    s_list = [se for se in s_list if se.state]
+    women_list = [se for se in s_list if se.gender == "woman"]
     for woman in women_list:
-        have_baby = int(random.choice([False]* (100-int(reproduction_probability(woman.age))) + [True] * (int(reproduction_probability(woman.age)))))
+        have_baby = random.choice([False]* (100-int(reproduction_probability(woman.age))) + [True] * (int(reproduction_probability(woman.age))))
         if have_baby:
-            settlers_list.append(settler(age = 0))
+            s_list.append(settler(age = 0))
+    
+    return s_list
 
-    print("-"* 10)
+def get_table(table, s_list, rows_number):
+    row_number = 0
+    for row in s_list:
+        if row_number < rows_number:
+            table.add_row([row.id, row.age, row.gender, row.state])
+            row_number += 1
+        if row_number == rows_number:
+            table.add_row(["...", "...", "...", "..."])
+            row_number += 1
+    return table
+    
+
+def get_max_age(s_list, init_age):
+    if max(s_list, key=lambda x: x.age).age > init_age:
+        return max(settlers_list, key=lambda x: x.age).age
+    return init_age
+
+
+initial_settlers_number = 10
+settlers_list = [settler() for i in range(initial_settlers_number)]
+jour = 0
+age_max = 0
+os.system("cls")
+
+table = PrettyTable()
+table.field_names = ["id", "age", "gender", "state"]
+
+root = tk.Tk()
+root.geometry("480x640")
+text = tk.Text(root, yscrollcommand=True)
+text.pack()
+scrollbar = tk.Scrollbar(root, command=text.yview)
+scrollbar.pack(side="right", fill="y")
+text.config(yscrollcommand=scrollbar.set)
+
+
+while len(settlers_list) > 0:
+    
+    
+    age_max = get_max_age(settlers_list, age_max)
+    
+    string_to_print = "jour: " +  str(jour)
+    string_to_print += "\nnombre de femmes: "+ str(len([se for se in settlers_list if se.gender == "woman"]))
+    string_to_print += "\nnombre d'hommes: "+ str(len([se for se in settlers_list if se.gender == "man"]))
+    string_to_print += "\nnombre d'habitants: "+ str(len(settlers_list))
+    string_to_print += "\nage max atteint: "+ str(age_max)
+    string_to_print += "\n" + str(get_table(table, settlers_list, 20))
+    
+    text.delete("1.0", "end")
+    text.insert("end", string_to_print)
+    
+    root.update()
+
+    table.clear_rows()
+
+    jour += 1
+    settlers_list = next_day(settlers_list)
+    
+     # Si l'utilisateur appuie sur la touche espace
+    if msvcrt.kbhit() and msvcrt.getch() == b' ':
+        break  # on sort de la boucle
+
+    time.sleep(0.01)
+    os.system("cls")
+    
