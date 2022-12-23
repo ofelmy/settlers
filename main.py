@@ -9,6 +9,7 @@ class settler():
 
         if age is None:
             self.age = self.random_age()
+            
         else: 
             self.age = age
         
