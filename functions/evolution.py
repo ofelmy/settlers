@@ -1,7 +1,9 @@
 from functions.settlers import *
 from functions.proba import *
+from functions.measure import *
 import random
 
+@measure_time
 def next_day(s_list):
     
     for j in s_list:

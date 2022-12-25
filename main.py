@@ -9,11 +9,11 @@ from functions.proba import *
 from functions.show import *
 from functions.settlers import *
 from functions.evolution import *
+from vars.main import *
 
 
 
 
-initial_settlers_number = 100
 settlers_list = [settler() for i in range(initial_settlers_number)]
 jour = 0
 age_max = 0
