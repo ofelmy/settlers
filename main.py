@@ -4,6 +4,7 @@ import os
 from prettytable import PrettyTable
 import msvcrt
 import tkinter as tk
+import matplotlib.pyplot as plt
 
 
 
@@ -111,14 +112,16 @@ def next_day(s_list):
 def get_table(table, s_list, rows_number):
     row_number = 0
     for row in s_list:
+        if row_number > rows_number:
+            return table
         if row_number < rows_number:
             table.add_row([row.id, row.age, row.gender, row.state])
             row_number += 1
         if row_number == rows_number:
             table.add_row(["...", "...", "...", "..."])
             row_number += 1
-    return table
-    
+def get_graphique(x, **value):
+    None
 
 def get_max_age(s_list, init_age):
     if max(s_list, key=lambda x: x.age).age > init_age:
@@ -126,7 +129,7 @@ def get_max_age(s_list, init_age):
     return init_age
 
 
-initial_settlers_number = 10
+initial_settlers_number = 1000
 settlers_list = [settler() for i in range(initial_settlers_number)]
 jour = 0
 age_max = 0
@@ -143,7 +146,8 @@ scrollbar = tk.Scrollbar(root, command=text.yview)
 scrollbar.pack(side="right", fill="y")
 text.config(yscrollcommand=scrollbar.set)
 
-
+plt.hist(jour, initial_settlers_number,alpha=0.5,color='black')
+plt.show(block=False)
 while len(settlers_list) > 0:
     
     
@@ -155,7 +159,8 @@ while len(settlers_list) > 0:
     string_to_print += "\nnombre d'habitants: "+ str(len(settlers_list))
     string_to_print += "\nage max atteint: "+ str(age_max)
     string_to_print += "\n" + str(get_table(table, settlers_list, 20))
-    
+    plt.hist(jour, len(settlers_list),alpha=0.5,color='black')
+    plt.draw()
     text.delete("1.0", "end")
     text.insert("end", string_to_print)
     
@@ -170,6 +175,6 @@ while len(settlers_list) > 0:
     if msvcrt.kbhit() and msvcrt.getch() == b' ':
         break  # on sort de la boucle
 
-    time.sleep(0.01)
+    time.sleep(0.1)
     os.system("cls")
     
