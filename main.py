@@ -50,7 +50,7 @@ while len(settlers_list) > 0:
     string_to_print += "\nnombre d'hommes: "+ str(len([se for se in settlers_list if se.gender == "man"]))
     string_to_print += "\nnombre d'habitants: "+ str(len(settlers_list))
     string_to_print += "\nage max atteint: "+ str(age_max)
-    string_to_print += "\n" + str(get_table(table, settlers_list, 20))
+    string_to_print += "\n" + str(get_table(table, settlers_list, rows_number_to_show))
     # plt.hist(jour, len(settlers_list),alpha=0.5,color='black')
     # plt.draw()
     data_show.delete("1.0", "end")
