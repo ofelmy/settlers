@@ -1,2 +1,2 @@
-initial_settlers_number = 100
-rows_number_to_show = 1000
+initial_settlers_number = 1000000
+rows_number_to_show = 100

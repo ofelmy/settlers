@@ -36,4 +36,5 @@ class settler():
     
     def is_alive(self, proba_dead:float):
         if self.state:
-            self.state = random.choice([True]*(1000-int(proba_dead)) + [False]*int(proba_dead))
+            proba = proba_dead/1000
+            self.state = random.random() > proba
